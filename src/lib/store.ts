@@ -18,6 +18,7 @@ export type TourStore = {
   markComplete: (code: string, date: string, completion: Completion) => Promise<Completion>;
   getCompletion: (code: string, date: string, participantId: string) => Promise<Completion | null>;
   listCompletions: (code: string, date: string) => Promise<Completion[]>;
+  listCompletedDates: (code: string, participantId: string, dates: string[]) => Promise<string[]>;
   dailyCounts: (code: string, dates: string[]) => Promise<Record<string, number>>;
 };
 
@@ -157,6 +158,10 @@ function createMemoryStore(persistToFile: boolean): TourStore {
         b.finishedAt.localeCompare(a.finishedAt),
       );
     },
+    async listCompletedDates(code, participantId, dates) {
+      const byDate = load().completions[code] ?? {};
+      return dates.filter((date) => Boolean(byDate[date]?.[participantId]));
+    },
     async dailyCounts(code, dates) {
       const data = load();
       const counts: Record<string, number> = {};
@@ -220,6 +225,13 @@ function createRedisStore(redis: Redis): TourStore {
         .map((value) => parseMaybeJson<Completion>(value))
         .filter((c): c is Completion => Boolean(c))
         .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt));
+    },
+    async listCompletedDates(code, participantId, dates) {
+      if (dates.length === 0) return [];
+      const pipeline = redis.pipeline();
+      for (const date of dates) pipeline.hget(doneKey(code, date), participantId);
+      const results = await pipeline.exec<unknown[]>();
+      return dates.filter((_, index) => results?.[index] != null);
     },
     async dailyCounts(code, dates) {
       if (dates.length === 0) return {};
