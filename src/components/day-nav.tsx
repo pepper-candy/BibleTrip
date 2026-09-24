@@ -5,21 +5,26 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { formatShortDate } from "@/lib/dates";
-import { getAdjacentDates, getScheduleDays } from "@/lib/schedule";
+import { getAdjacentDates, getScheduleDay, getScheduleDays } from "@/lib/schedule";
 import { cn } from "@/lib/utils";
 
 export function DayNav({
   code,
   date,
   today,
+  journeyDate,
 }: {
   code: string;
   date: string;
   today: string;
+  journeyDate?: string | null;
 }) {
   const router = useRouter();
   const { prev, next } = getAdjacentDates(date);
   const days = getScheduleDays();
+  const showToday = date !== today;
+  const showJourney = Boolean(journeyDate && journeyDate !== date);
+  const todayHref = getScheduleDay(today) ? `/t/${code}/${today}` : `/t/${code}?stay=1`;
 
   return (
     <div className="space-y-3">
@@ -65,10 +70,22 @@ export function DayNav({
           <ChevronRight />
         </Link>
       </div>
-      {date !== today ? (
-        <Link href={`/t/${code}`} className={cn(buttonVariants({ variant: "ghost" }), "w-full")}>
-          回到今天
-        </Link>
+      {showToday || showJourney ? (
+        <div className="flex flex-col gap-2 sm:flex-row">
+          {showToday ? (
+            <Link href={todayHref} className={cn(buttonVariants({ variant: "ghost" }), "h-11 flex-1")}>
+              回到今天
+            </Link>
+          ) : null}
+          {showJourney && journeyDate ? (
+            <Link
+              href={`/t/${code}/${journeyDate}`}
+              className={cn(buttonVariants({ variant: "outline" }), "h-11 flex-1")}
+            >
+              繼續我的旅程 · {formatShortDate(journeyDate)}
+            </Link>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );

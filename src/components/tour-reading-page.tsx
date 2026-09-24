@@ -7,16 +7,20 @@ import { SiteShell } from "@/components/site-shell";
 import { isValidCode, normalizeCode } from "@/lib/codes";
 import { readParticipant } from "@/lib/cookies";
 import { formatLongDate, seasonStatus, todayInHongKong } from "@/lib/dates";
+import { journeyDateFor } from "@/lib/progress";
 import { getReading, hasReading } from "@/lib/readings";
+import { getScheduleDays } from "@/lib/schedule";
 import { getStore } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 
 export async function TourReadingPage({
   code: rawCode,
   date: rawDate,
+  preferToday = false,
 }: {
   code: string;
   date?: string;
+  preferToday?: boolean;
 }) {
   const code = normalizeCode(rawCode);
   if (!isValidCode(code)) redirect("/join");
@@ -36,11 +40,21 @@ export async function TourReadingPage({
   if (!identity) redirect(`/j/${code}`);
 
   const today = todayInHongKong();
+  const store = getStore();
+  const completedDates = await store.listCompletedDates(
+    code,
+    identity.id,
+    getScheduleDays().map((day) => day.date),
+  );
+  const journeyDate = journeyDateFor(completedDates, today);
+  if (!rawDate && !preferToday && journeyDate && journeyDate !== today) {
+    redirect(`/t/${code}/${journeyDate}`);
+  }
+
   const requested = rawDate ?? today;
   const status = seasonStatus(today);
   const inSeasonDay = hasReading(requested);
   const reading = inSeasonDay ? getReading(requested) : undefined;
-  const store = getStore();
   const completion =
     identity && reading ? await store.getCompletion(code, requested, identity.id) : null;
 
@@ -65,7 +79,12 @@ export async function TourReadingPage({
       {status !== "active" && !rawDate ? <SeasonGate status={status} /> : null}
 
       <div className="mt-4">
-        <DayNav code={code} date={reading?.date ?? (hasReading(today) ? today : "2026-08-01")} today={today} />
+        <DayNav
+          code={code}
+          date={reading?.date ?? (hasReading(today) ? today : "2026-08-01")}
+          today={today}
+          journeyDate={journeyDate}
+        />
       </div>
 
       {reading ? (

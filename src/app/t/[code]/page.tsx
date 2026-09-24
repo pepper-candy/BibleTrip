@@ -9,9 +9,12 @@ export const dynamic = "force-dynamic";
 
 export default async function TodayReadingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ code: string }>;
+  searchParams: Promise<{ stay?: string }>;
 }) {
   const { code } = await params;
-  return <TourReadingPage code={code} />;
+  const { stay } = await searchParams;
+  return <TourReadingPage code={code} preferToday={stay === "1"} />;
 }
