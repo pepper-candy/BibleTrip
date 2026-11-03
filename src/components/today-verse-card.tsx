@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SEASON_END, SEASON_START } from "@/lib/constants";
 import { formatLongDate, seasonStatus, todayInHongKong } from "@/lib/dates";
 import { getScheduleDay } from "@/lib/schedule";
 
@@ -41,7 +42,7 @@ export function TodayVerseCard({ initialToday }: { initialToday: string }) {
     <div className="mt-8 rounded-2xl bg-card/80 p-4 ring-1 ring-foreground/8">
       <p className="font-medium">{status === "before" ? "本季尚未開始" : "本季已經結束"}</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        行程為 2026 年 8 月 1 日至 10 月 31 日。主持人仍可先建立活動、發出邀請。
+        行程為 {SEASON_START} 至 {SEASON_END}。主持人仍可先建立活動、發出邀請。
       </p>
     </div>
   );

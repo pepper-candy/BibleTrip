@@ -19,7 +19,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const schedulePath = join(root, "data", "schedule-2026-q3.json");
+const schedulePath = join(root, "data", "schedule-2026-q4.json");
 const outPath = join(root, "data", "readings.json");
 const cacheDir = join(root, "data", "cache");
 const defaultUsfxPath = join(cacheDir, "chi-cuv.usfx.xml");
@@ -36,10 +36,28 @@ const BOOK_MAP = {
   弗: { id: "EPH", name: "以弗所書" },
   腓: { id: "PHP", name: "腓立比書" },
   西: { id: "COL", name: "歌羅西書" },
+  帖前: { id: "1TH", name: "帖撒羅尼迦前書" },
+  帖後: { id: "2TH", name: "帖撒羅尼迦後書" },
+  提前: { id: "1TI", name: "提摩太前書" },
+  提後: { id: "2TI", name: "提摩太後書" },
+  提多: { id: "TIT", name: "提多書" },
+  門: { id: "PHM", name: "腓利門書" },
+  來: { id: "HEB", name: "希伯來書" },
+  雅: { id: "JAS", name: "雅各書" },
+  彼前: { id: "1PE", name: "彼得前書" },
+  彼後: { id: "2PE", name: "彼得後書" },
+  約壹: { id: "1JN", name: "約翰一書" },
+  約貳: { id: "2JN", name: "約翰二書" },
+  約參: { id: "3JN", name: "約翰三書" },
+  猶: { id: "JUD", name: "猶大書" },
+  啟: { id: "REV", name: "啟示錄" },
   箴: { id: "PRO", name: "箴言" },
+  詩: { id: "PSA", name: "詩篇" },
 };
 
-const REF_RE = /^(徒|羅|林前|林後|加|弗|腓|西|箴)(\d+)(?::(\d+)(?:-(\d+))?)?$/;
+// Longest abbreviations first so 帖前 matches before 帖, 提多 before 提, etc.
+const ABBRS = Object.keys(BOOK_MAP).sort((a, b) => b.length - a.length);
+const REF_RE = new RegExp(`^(${ABBRS.join("|")})(\\d+)(?::(\\d+)(?:-(\\d+))?)?$`);
 
 function parseRef(ref) {
   const m = REF_RE.exec(ref);
@@ -179,7 +197,7 @@ async function main() {
   };
 
   writeFileSync(outPath, JSON.stringify(payload));
-  const sample = days["2026-08-01"];
+  const sample = days["2026-11-01"];
   console.log(
     `Wrote ${Object.keys(days).length} days → ${outPath} (${Math.round(
       Buffer.byteLength(JSON.stringify(payload)) / 1024,

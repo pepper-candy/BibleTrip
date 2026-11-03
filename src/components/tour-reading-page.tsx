@@ -5,11 +5,12 @@ import { FinishBar } from "@/components/finish-bar";
 import { ReadingView, SeasonGate } from "@/components/reading-view";
 import { SiteShell } from "@/components/site-shell";
 import { isValidCode, normalizeCode } from "@/lib/codes";
+import { SEASON_START } from "@/lib/constants";
 import { readParticipant } from "@/lib/cookies";
 import { formatLongDate, seasonStatus, todayInHongKong } from "@/lib/dates";
 import { journeyDateFor } from "@/lib/progress";
 import { getReading, hasReading } from "@/lib/readings";
-import { getScheduleDays } from "@/lib/schedule";
+import { getScheduleDays, seasonDisplayTitle } from "@/lib/schedule";
 import { getStore } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 
@@ -62,7 +63,7 @@ export async function TourReadingPage({
     <SiteShell wide>
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs text-muted-foreground">{event.title}</p>
+          <p className="text-xs text-muted-foreground">{seasonDisplayTitle()}</p>
           <h1 className="text-xl font-semibold">
             {reading ? formatLongDate(requested) : "本季行程"}
           </h1>
@@ -81,7 +82,7 @@ export async function TourReadingPage({
       <div className="mt-4">
         <DayNav
           code={code}
-          date={reading?.date ?? (hasReading(today) ? today : "2026-08-01")}
+          date={reading?.date ?? (hasReading(today) ? today : SEASON_START)}
           today={today}
           journeyDate={journeyDate}
         />

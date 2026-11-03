@@ -6,7 +6,7 @@ import { InvitePanel } from "@/components/invite-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatHktDateTime, formatLongDate, formatShortDate } from "@/lib/dates";
-import { getScheduleDays } from "@/lib/schedule";
+import { getScheduleDays, seasonDisplayTitle, schedule } from "@/lib/schedule";
 import type { Completion, Participant } from "@/lib/types";
 
 type DashboardPayload = {
@@ -78,9 +78,9 @@ export function HostDashboard({
   return (
     <div className="space-y-6">
       <section className="space-y-1">
-        <p className="text-xs tracking-[0.16em] text-muted-foreground">{data.event.org}</p>
-        <h1 className="text-2xl font-semibold text-pretty">{data.event.title}</h1>
-        <p className="text-sm text-muted-foreground">{data.event.season}</p>
+        <p className="text-xs tracking-[0.16em] text-muted-foreground">{schedule.org}</p>
+        <h1 className="text-2xl font-semibold text-pretty">{seasonDisplayTitle()}</h1>
+        <p className="text-sm text-muted-foreground">{schedule.season}</p>
       </section>
 
       <InvitePanel code={data.event.code} hostToken={data.event.hostToken} />

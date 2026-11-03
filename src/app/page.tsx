@@ -69,7 +69,7 @@ export default async function HomePage() {
       <div className="mt-10 flex items-start gap-3 text-sm leading-relaxed text-muted-foreground">
         <BookOpenText className="mt-0.5 size-4 shrink-0" />
         <p>
-          本季覆蓋使徒行傳 20–28、羅馬書、哥林多前後書、加拉太書、以弗所書、腓立比書、歌羅西書，以及每日箴言。經文為公開領域
+          本季覆蓋帖撒羅尼迦前後書、提摩太前後書、提多書、腓利門書、希伯來書、雅各書、彼得前後書、約翰一二三書、猶大書、啟示錄，以及每日箴言／詩篇。經文為公開領域
           1919 年和合本（繁體）。
         </p>
       </div>

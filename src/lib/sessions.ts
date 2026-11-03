@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { isValidCode } from "@/lib/codes";
 import { parseParticipantCookie } from "@/lib/cookies";
+import { seasonDisplayTitle } from "@/lib/schedule";
 import { getStore } from "@/lib/store";
 
 export type DeviceTour = {
@@ -32,12 +33,14 @@ export async function listDeviceTours(): Promise<DeviceTour[]> {
   if (codes.length === 0) return [];
 
   const store = getStore();
+  const liveTitle = seasonDisplayTitle();
   const tours = await Promise.all(
     codes.map(async (code) => {
       const event = await store.getEvent(code);
       return {
         code,
-        title: event?.title || "讀經旅行團",
+        // Prefer live schedule season so old invites show 第4季 after deploy
+        title: event ? liveTitle : "讀經旅行團",
         isHost: hosted.has(code),
         participantName: joined.get(code),
       } satisfies DeviceTour;

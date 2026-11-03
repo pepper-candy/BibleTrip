@@ -1,4 +1,6 @@
 import type { DayReading, Passage } from "@/lib/types";
+import { SEASON_END, SEASON_START } from "@/lib/constants";
+import { schedule } from "@/lib/schedule";
 
 function PassageBlock({ passage, kicker }: { passage: Passage; kicker: string }) {
   return (
@@ -22,11 +24,16 @@ function PassageBlock({ passage, kicker }: { passage: Passage; kicker: string })
   );
 }
 
+function secondaryKicker(passage: Passage): string {
+  if (passage.bookName.includes("詩") || passage.ref.startsWith("詩")) return "每日詩篇";
+  return "每日箴言";
+}
+
 export function ReadingView({ reading }: { reading: DayReading }) {
   return (
     <article className="space-y-10 rounded-2xl bg-card/80 px-4 py-6 shadow-sm ring-1 ring-foreground/8 sm:px-6">
       <PassageBlock passage={reading.main} kicker="本日經文" />
-      <PassageBlock passage={reading.proverbs} kicker="每日箴言" />
+      <PassageBlock passage={reading.proverbs} kicker={secondaryKicker(reading.proverbs)} />
     </article>
   );
 }
@@ -39,7 +46,7 @@ export function SeasonGate({ status }: { status: "before" | "after" }) {
         {status === "before" ? "本季尚未開始" : "本季已經結束"}
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        2026 信心之旅第 3 季由 8 月 1 日至 10 月 31 日。你仍可瀏覽行程中的經文，
+        {schedule.season}由 {SEASON_START} 至 {SEASON_END}。你仍可瀏覽行程中的經文，
         主持人事先建立活動也不受影響。
       </p>
     </div>
