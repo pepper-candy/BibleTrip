@@ -6,10 +6,10 @@
 
 ## 本季範圍
 
-帖撒羅尼迦前後書、提摩太前後書、提多書、腓利門書、希伯來書、雅各書、彼得前後書、約翰一二三書、猶大書、啟示錄，以及每日箴言／詩篇。共 92 天（2026-11-01 至 2027-01-31）。時區以 **Asia/Hong_Kong** 計算「今天」。
+帖撒羅尼迦前後書、提摩太前後書、提多書、腓利門書、希伯來書、雅各書、彼得前後書、約翰一二三書、猶大書、啟示錄，以及每日箴言／詩篇。第4季 92 天（2026-11-01 至 2027-01-31）；第3季仍可回看（2026-08-01 至 2026-10-31）。時區以 **Asia/Hong_Kong** 計算「今天」。
 
-行程資料：[`data/schedule-2026-q4.json`](data/schedule-2026-q4.json)  
-預載經文：[`data/readings.json`](data/readings.json)
+行程資料：[`data/schedule-2026-q3.json`](data/schedule-2026-q3.json) + [`data/schedule-2026-q4.json`](data/schedule-2026-q4.json)（日期選擇器兩季並存，‹ › 可跨季）  
+預載經文：[`data/readings.json`](data/readings.json)（184 天）
 
 ## 本地執行
 

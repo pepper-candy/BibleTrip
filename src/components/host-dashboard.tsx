@@ -118,12 +118,26 @@ export function HostDashboard({
             );
           }}
         >
-          {days.map((day) => (
-            <option key={day.date} value={day.date}>
-              {formatShortDate(day.date)}
-              {day.date === data.today ? " · 今天" : ""} · {day.main} · 完成 {data.counts[day.date] ?? 0}
-            </option>
-          ))}
+          <optgroup label="第3季：8月–10月">
+            {days
+              .filter((day) => day.seasonId === "q3")
+              .map((day) => (
+                <option key={day.date} value={day.date}>
+                  {formatShortDate(day.date)}
+                  {day.date === data.today ? " · 今天" : ""} · {day.main} · 完成 {data.counts[day.date] ?? 0}
+                </option>
+              ))}
+          </optgroup>
+          <optgroup label="第4季：11月–2027年1月">
+            {days
+              .filter((day) => day.seasonId === "q4")
+              .map((day) => (
+                <option key={`q4-${day.date}`} value={day.date}>
+                  {formatShortDate(day.date)}
+                  {day.date === data.today ? " · 今天" : ""} · {day.main} · 完成 {data.counts[day.date] ?? 0}
+                </option>
+              ))}
+          </optgroup>
         </select>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input

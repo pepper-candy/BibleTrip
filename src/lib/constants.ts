@@ -1,5 +1,7 @@
 export const TIMEZONE = "Asia/Hong_Kong";
-export const SEASON_START = "2026-11-01";
+/** First day of the earliest loaded season (Q3). */
+export const SEASON_START = "2026-08-01";
+/** Last day of the latest loaded season (Q4). */
 export const SEASON_END = "2027-01-31";
 
 export const DEFAULT_TITLE = "聖經旅行團｜2026 信心之旅（第4季）";

@@ -63,7 +63,7 @@ export async function TourReadingPage({
     <SiteShell wide>
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs text-muted-foreground">{seasonDisplayTitle()}</p>
+          <p className="text-xs text-muted-foreground">{seasonDisplayTitle(requested)}</p>
           <h1 className="text-xl font-semibold">
             {reading ? formatLongDate(requested) : "本季行程"}
           </h1>

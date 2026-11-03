@@ -19,7 +19,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const schedulePath = join(root, "data", "schedule-2026-q4.json");
+const schedulePaths = [
+  join(root, "data", "schedule-2026-q3.json"),
+  join(root, "data", "schedule-2026-q4.json"),
+];
 const outPath = join(root, "data", "readings.json");
 const cacheDir = join(root, "data", "cache");
 const defaultUsfxPath = join(cacheDir, "chi-cuv.usfx.xml");
@@ -165,9 +168,10 @@ async function ensureUsfx() {
 }
 
 async function main() {
-  const schedule = JSON.parse(readFileSync(schedulePath, "utf8"));
-  if (!Array.isArray(schedule.days) || schedule.days.length !== 92) {
-    throw new Error(`Expected 92 scheduled days, got ${schedule.days?.length}`);
+  const schedules = schedulePaths.map((path) => JSON.parse(readFileSync(path, "utf8")));
+  const allDays = schedules.flatMap((schedule) => schedule.days);
+  if (allDays.length !== 184) {
+    throw new Error(`Expected 184 scheduled days (Q3+Q4), got ${allDays.length}`);
   }
 
   const usfxPath = await ensureUsfx();
@@ -175,7 +179,7 @@ async function main() {
   const books = parseUsfx(xml);
 
   const days = {};
-  for (const day of schedule.days) {
+  for (const day of allDays) {
     days[day.date] = {
       date: day.date,
       main: resolvePassage(books, day.main),
@@ -197,7 +201,7 @@ async function main() {
   };
 
   writeFileSync(outPath, JSON.stringify(payload));
-  const sample = days["2026-11-01"];
+  const sample = days["2026-11-01"] || days["2026-08-01"];
   console.log(
     `Wrote ${Object.keys(days).length} days → ${outPath} (${Math.round(
       Buffer.byteLength(JSON.stringify(payload)) / 1024,
